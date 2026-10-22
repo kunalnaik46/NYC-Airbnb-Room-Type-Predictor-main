@@ -29,9 +29,7 @@
     <header class="top-nav">
       <div class="brand">
         <div class="brand-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h1M14 10h1M9 14h1M14 14h1M9 18h1M14 18h1"/>
-          </svg>
+          <img src="assets/nyc_logo.jpg" alt="SkylineAI Logo" class="brand-logo-img">
         </div>
         <div class="brand-text">
           <span class="brand-name">SKYLINE<span class="brand-accent">AI</span></span>
@@ -63,6 +61,29 @@
       <p class="hero-description">
         Trained on thousands of NYC listings across all 5 boroughs. Enter property coordinates, pricing, and availability to predict whether a listing is an <strong>Entire Home</strong>, a <strong>Private Room</strong>, or a <strong>Shared Room</strong> with calibrated confidence metrics.
       </p>
+
+      <!-- Model Stats Ticker Bar -->
+      <div class="stats-ticker">
+        <div class="stat-pill">
+          <span class="stat-num">48,895+</span>
+          <span class="stat-desc">NYC Listings Trained</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-pill">
+          <span class="stat-num">200</span>
+          <span class="stat-desc">Random Forest Trees</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-pill">
+          <span class="stat-num">217</span>
+          <span class="stat-desc">NYC Neighborhoods</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-pill">
+          <span class="stat-num">5</span>
+          <span class="stat-desc">Boroughs Covered</span>
+        </div>
+      </div>
 
       <!-- Quick Preset Carousel / Pills -->
       <div class="preset-section">
@@ -124,13 +145,13 @@
               <span>Geographic Location</span>
             </div>
 
-            <!-- Borough Quick Select Buttons -->
+            <!-- Borough Quick Select Buttons with Landmark Icons -->
             <div class="borough-tabs" id="boroughTabs">
-              <button type="button" class="borough-tab active" data-borough="Manhattan">Manhattan</button>
-              <button type="button" class="borough-tab" data-borough="Brooklyn">Brooklyn</button>
-              <button type="button" class="borough-tab" data-borough="Queens">Queens</button>
-              <button type="button" class="borough-tab" data-borough="Bronx">Bronx</button>
-              <button type="button" class="borough-tab" data-borough="Staten Island">Staten Island</button>
+              <button type="button" class="borough-tab active" data-borough="Manhattan"><span class="tab-emoji">🗽</span> Manhattan</button>
+              <button type="button" class="borough-tab" data-borough="Brooklyn"><span class="tab-emoji">🌉</span> Brooklyn</button>
+              <button type="button" class="borough-tab" data-borough="Queens"><span class="tab-emoji">✈️</span> Queens</button>
+              <button type="button" class="borough-tab" data-borough="Bronx"><span class="tab-emoji">⚾</span> Bronx</button>
+              <button type="button" class="borough-tab" data-borough="Staten Island"><span class="tab-emoji">⛴️</span> Staten Island</button>
             </div>
             <input type="hidden" id="neighbourhood_group" name="neighbourhood_group" value="Manhattan">
 
