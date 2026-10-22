@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NYC Airbnb Room Type Predictor · AI Classification Engine</title>
+  <meta name="description" content="Predict New York City Airbnb listing room types using machine learning trained on thousands of NYC listings. Explore live probability distributions and urban architectural visualizations.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Backdrop Elements -->
+  <div class="skyline-backdrop" aria-hidden="true">
+    <div class="skyline-glow"></div>
+    <div class="skyline-silhouette" id="skylineSilhouette"></div>
+    <div class="stars-container" id="starsContainer"></div>
+  </div>
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <div class="app-wrapper">
+
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h1M14 10h1M9 14h1M14 14h1M9 18h1M14 18h1"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">SKYLINE<span class="brand-accent">AI</span></span>
+          <span class="brand-tag">NYC AIRBNB CLASSIFIER</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="api-badge" id="apiStatusBadge">
+          <span class="pulse-dot"></span>
+          <span class="status-label" id="apiStatusText">Connecting...</span>
+        </div>
+        <button type="button" class="icon-btn" id="apiConfigBtn" title="API Configuration" aria-label="API Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-sparkle">✨</span>
+        <span>Machine Learning Room Type Intelligence</span>
+      </div>
+      <h1 class="hero-headline">Predict New York City<br><span class="gradient-text">Listing Room Types</span></h1>
+      <p class="hero-description">
+        Trained on thousands of NYC listings across all 5 boroughs. Enter property coordinates, pricing, and availability to predict whether a listing is an <strong>Entire Home</strong>, a <strong>Private Room</strong>, or a <strong>Shared Room</strong> with calibrated confidence metrics.
+      </p>
+
+      <!-- Quick Preset Carousel / Pills -->
+      <div class="preset-section">
+        <span class="preset-label">Quick Presets:</span>
+        <div class="preset-chips" id="presetChips">
+          <button type="button" class="chip active" data-preset="manhattan">
+            <span class="chip-dot dot-home"></span>
+            <span class="chip-title">Midtown Luxury Loft</span>
+            <span class="chip-price">$285/nt</span>
+          </button>
+          <button type="button" class="chip" data-preset="brooklyn">
+            <span class="chip-dot dot-private"></span>
+            <span class="chip-title">Williamsburg Studio</span>
+            <span class="chip-price">$85/nt</span>
+          </button>
+          <button type="button" class="chip" data-preset="queens">
+            <span class="chip-dot dot-shared"></span>
+            <span class="chip-title">Astoria Co-Living</span>
+            <span class="chip-price">$38/nt</span>
+          </button>
+          <button type="button" class="chip" data-preset="random">
+            <span class="chip-icon">🎲</span>
+            <span class="chip-title">Randomize</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Grid: Inputs vs Results -->
+    <main class="main-grid">
+
+      <!-- Left Panel: Input Form -->
+      <section class="card form-card">
+        <div class="card-header">
+          <div class="header-title">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <div>
+              <h2>Listing Parameters</h2>
+              <p class="card-subtitle">Adjust geospatial and booking attributes</p>
+            </div>
+          </div>
+          <button type="button" class="text-btn" id="resetBtn">Clear Form</button>
+        </div>
+
+        <form id="predictionForm" novalidate>
+
+          <!-- Group 1: Geographic Location -->
+          <div class="form-section">
+            <div class="section-title">
+              <span class="section-num">01</span>
+              <span>Geographic Location</span>
+            </div>
+
+            <!-- Borough Quick Select Buttons -->
+            <div class="borough-tabs" id="boroughTabs">
+              <button type="button" class="borough-tab active" data-borough="Manhattan">Manhattan</button>
+              <button type="button" class="borough-tab" data-borough="Brooklyn">Brooklyn</button>
+              <button type="button" class="borough-tab" data-borough="Queens">Queens</button>
+              <button type="button" class="borough-tab" data-borough="Bronx">Bronx</button>
+              <button type="button" class="borough-tab" data-borough="Staten Island">Staten Island</button>
+            </div>
+            <input type="hidden" id="neighbourhood_group" name="neighbourhood_group" value="Manhattan">
+
+            <div class="input-grid">
+              <div class="input-field col-span-2">
+                <label for="neighbourhood">Neighbourhood Name</label>
+                <div class="input-wrapper">
+                  <input type="text" id="neighbourhood" name="neighbourhood" placeholder="e.g. Midtown, Williamsburg, Chelsea" list="neighborhoodList" required autocomplete="off">
+                  <datalist id="neighborhoodList">
+                    <!-- Populated dynamically via JS -->
+                  </datalist>
+                  <span class="input-unit">NYC</span>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="latitude">Latitude</label>
+                <div class="input-wrapper">
+                  <input type="number" id="latitude" name="latitude" step="0.0001" min="-90" max="90" placeholder="40.7549" required>
+                  <span class="input-unit">°N</span>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="longitude">Longitude</label>
+                <div class="input-wrapper">
+                  <input type="number" id="longitude" name="longitude" step="0.0001" min="-180" max="180" placeholder="-73.9840" required>
+                  <span class="input-unit">°W</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group 2: Pricing & Stay Duration -->
+          <div class="form-section">
+            <div class="section-title">
+              <span class="section-num">02</span>
+              <span>Financials &amp; Duration</span>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-field">
+                <div class="label-with-meta">
+                  <label for="price">Nightly Rate (USD)</label>
+                  <span class="tier-pill" id="priceTierPill">Luxury Tier</span>
+                </div>
+                <div class="input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="price" name="price" min="1" max="10000" step="1" placeholder="285" required>
+                  <span class="input-unit">/ night</span>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="minimum_nights">Minimum Booking (Nights)</label>
+                <div class="input-wrapper">
+                  <input type="number" id="minimum_nights" name="minimum_nights" min="1" max="365" step="1" placeholder="3" required>
+                  <span class="input-unit">nights</span>
+                </div>
+              </div>
+
+              <div class="input-field col-span-2">
+                <div class="label-with-meta">
+                  <label for="availability_365">Annual Availability</label>
+                  <span class="slider-val" id="availabilityReadout">240 days / yr</span>
+                </div>
+                <div class="slider-wrapper">
+                  <input type="range" id="availability_365" name="availability_365" min="0" max="365" step="1" value="240">
+                  <div class="slider-ticks">
+                    <span>Rarely Available (0)</span>
+                    <span>Seasonal (180)</span>
+                    <span>Year-round (365)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group 3: Host Activity & Reviews -->
+          <div class="form-section">
+            <div class="section-title">
+              <span class="section-num">03</span>
+              <span>Host &amp; Community Feedback</span>
+            </div>
+
+            <div class="input-grid">
+              <div class="input-field">
+                <label for="number_of_reviews">Total Reviews</label>
+                <div class="input-wrapper">
+                  <input type="number" id="number_of_reviews" name="number_of_reviews" min="0" step="1" placeholder="72" required>
+                  <span class="input-unit">reviews</span>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="reviews_per_month">Reviews Per Month</label>
+                <div class="input-wrapper">
+                  <input type="number" id="reviews_per_month" name="reviews_per_month" min="0" step="0.01" placeholder="2.40" required>
+                  <span class="input-unit">/ mo</span>
+                </div>
+              </div>
+
+              <div class="input-field col-span-2">
+                <div class="label-with-meta">
+                  <label for="calculated_host_listings_count">Host Listing Portfolio</label>
+                  <span class="host-badge" id="hostTypeBadge">Single Host</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="calculated_host_listings_count" name="calculated_host_listings_count" min="1" max="500" step="1" placeholder="1" required>
+                  <span class="input-unit">total listings</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="cta-predict-btn" id="predictSubmitBtn">
+            <span class="btn-shine"></span>
+            <span class="btn-text">Run Machine Learning Classifier</span>
+            <span class="btn-loader" aria-hidden="true"></span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+
+          <div class="alert-box error" id="formErrorAlert" role="alert" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="formErrorMessage"></span>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Right Panel: Prediction Results & Architecture Viz -->
+      <section class="card result-card" id="resultCard" aria-live="polite">
+
+        <!-- Initial Placeholder State -->
+        <div class="result-placeholder" id="resultPlaceholder">
+          <div class="blueprint-graphic">
+            <div class="blueprint-grid"></div>
+            <div class="blueprint-city">
+              <div class="blueprint-tower t1"></div>
+              <div class="blueprint-tower t2"></div>
+              <div class="blueprint-tower t3"></div>
+            </div>
+            <div class="scan-line"></div>
+          </div>
+          <h3>Awaiting Listing Data</h3>
+          <p>Select a quick preset above or fill in the property specifications to run the classification model and watch the NYC skyline light up.</p>
+          <div class="ready-badge">
+            <span class="ready-dot"></span>
+            <span>Pipeline ready for inference</span>
+          </div>
+        </div>
+
+        <!-- Active Result State -->
+        <div class="result-display" id="resultDisplay" hidden>
+
+          <!-- Top Highlight Banner -->
+          <div class="prediction-hero-banner">
+            <div class="banner-top">
+              <span class="classification-tag">PREDICTED ROOM TYPE</span>
+              <span class="confidence-pill" id="confidencePill">91.4% Confidence</span>
+            </div>
+            <h3 class="predicted-room-title" id="predictedRoomTitle">Entire home/apt</h3>
+            <p class="predicted-room-desc" id="predictedRoomDesc">
+              Full private residential unit with exclusive guest access, kitchen, and dedicated entryway.
+            </p>
+          </div>
+
+          <!-- NYC Architectural Skyline Visualization -->
+          <div class="skyline-viz-container">
+            <div class="viz-header">
+              <span>Interactive Skyline Distribution</span>
+              <span class="viz-sub">Window illumination correlates to class probability</span>
+            </div>
+
+            <div class="skyline-buildings" id="skylineBuildings">
+              <!-- Dynamically generated with 3 detailed architectural towers -->
+            </div>
+          </div>
+
+          <!-- Probability Distribution Bars -->
+          <div class="probabilities-container">
+            <h4>Probability Spectrum</h4>
+            <div class="prob-bars-list" id="probBarsList">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+
+          <!-- Listing Key Signals -->
+          <div class="signals-container">
+            <h4>Key Inference Drivers</h4>
+            <div class="signals-grid" id="signalsGrid">
+              <div class="signal-item">
+                <span class="signal-label">Nightly Rate</span>
+                <span class="signal-value" id="signalPrice">High rate strongly favors Entire Home</span>
+              </div>
+              <div class="signal-item">
+                <span class="signal-label">Availability</span>
+                <span class="signal-value" id="signalAvailability">Year-round commercial availability</span>
+              </div>
+              <div class="signal-item">
+                <span class="signal-label">Borough Geo-Zone</span>
+                <span class="signal-value" id="signalGeo">Manhattan core market profile</span>
+              </div>
+              <div class="signal-item">
+                <span class="signal-label">Host Footprint</span>
+                <span class="signal-value" id="signalHost">Individual host profile</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions Footer -->
+          <div class="result-actions">
+            <button type="button" class="secondary-btn" id="copyResultBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span>Copy Summary</span>
+            </button>
+            <button type="button" class="secondary-btn" id="jsonToggleBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+              <span>View JSON</span>
+            </button>
+          </div>
+
+          <!-- Collapsible JSON Output -->
+          <div class="json-drawer" id="jsonDrawer" hidden>
+            <pre><code id="jsonOutput">{}</code></pre>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <p>NYC Airbnb Room Type Classifier · v2.0</p>
+        <p class="footer-sub">Engineered with scikit-learn Random Forest ensemble &amp; FastAPI backend</p>
+      </div>
+      <div class="footer-right">
+        <span class="model-badge">200 Estimators</span>
+        <span class="model-badge">Balanced Weights</span>
+        <span class="model-badge">217 Neighborhoods</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- API Config Modal -->
+  <div class="modal-backdrop" id="apiModal" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>API Connection Settings</h3>
+        <button type="button" class="modal-close" id="closeModalBtn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Select or enter the FastAPI endpoint URL for room type predictions:</p>
+
+        <div class="radio-options">
+          <label class="radio-label">
+            <input type="radio" name="apiChoice" value="local" checked>
+            <div class="radio-meta">
+              <strong>Localhost Backend</strong>
+              <span>Same origin or http://127.0.0.1:8000</span>
+            </div>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="apiChoice" value="cloud">
+            <div class="radio-meta">
+              <strong>Render Cloud Deployment</strong>
+              <span>https://nyc-airbnb-room-type-predictor.onrender.com</span>
+            </div>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="apiChoice" value="custom">
+            <div class="radio-meta">
+              <strong>Custom Endpoint</strong>
+              <span>Enter custom URL below</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="input-field" id="customUrlField" style="margin-top: 14px; display: none;">
+          <label for="customApiUrl">Custom API Base URL</label>
+          <input type="url" id="customApiUrl" placeholder="https://your-api.com">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="secondary-btn" id="cancelModalBtn">Cancel</button>
+        <button type="button" class="primary-btn" id="saveApiBtn">Save Connection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
